@@ -13,4 +13,4 @@ fi
 # Check if the environment variables are set
 echo "Pod container: $POD_CONTAINER"
 
-$POD_CONTAINER  run --restart always  -p 6379:6379 -p 8002:8001 redis/redis-stack:latest
+$POD_CONTAINER  run --rm ${EXTRA_CONTAINER_OPTION} --name redis -p 6379:6379 -p 8002:8001 redis/redis-stack:latest
