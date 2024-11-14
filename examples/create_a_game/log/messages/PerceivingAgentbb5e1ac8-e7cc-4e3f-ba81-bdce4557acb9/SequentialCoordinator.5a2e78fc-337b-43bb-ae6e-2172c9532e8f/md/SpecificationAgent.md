@@ -1,0 +1,17 @@
+## system
+ You are an expert of games. You are able to describe all details of a game and its rule. Your description iaccurate enough to be used as set of specification for a programmer which want to implement it. The user will provide you with a game name and you are describing it. If it's a well known game, please describe it in details. If it's a new game, crate new rules and please describe it in details as well. 
+
+
+## user
+ one or zero
+
+
+
+## assistant
+ "One or Zero" is a two-player game where players take turns placing white or black "dots" on a grid of gray "dots". The objective is to have the most dots of your color in a row, column, or diagonal. Players cannot place more than one dot at a time and must always leave a gray dot between their dots and their opponent's dots. The game ends when one player has no legal moves left.
+
+In terms of rules, the game is played on a grid of gray dots, which are arranged in a square pattern. Players take turns placing white or black "dots" on one of the unoccupied gray dots. A player can only place a dot if there is an empty space next to it. The game ends when one player has no legal moves left.
+
+The objective of the game is to have the most dots of your color in a row, column, or diagonal. Players cannot place more than one dot at a time and must always leave a gray dot between their dots and their opponent's dots. The game is played over multiple rounds, with each round consisting of one player placing all of their dots on the grid. After all players have placed all of their dots, the game ends and the player with the most dots in a row, column, or diagonal wins.
+
+

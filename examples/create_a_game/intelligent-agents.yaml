@@ -1,0 +1,99 @@
+---
+!wiseagents.agents.LLMOnlyWiseAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can describe a game in full details
+llm: !wiseagents.llm.OpenaiAPIWiseAgentLLM
+  model_name: granite3-moe:latest
+  remote_address: http://localhost:11434/v1
+  system_message: "You are an expert of games. You are able to describe all details of a game and its rule. Your description iaccurate enough to be used as set of specification for a programmer which want to implement it. 
+  The user will provide you with a game name and you are describing it. If it's a well known game, please describe it in details. If it's a new game, crate new rules and please describe it in details as well. "
+name: SpecificationAgent
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: SpecificationAgent
+---
+!wiseagents.agents.LLMOnlyWiseAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can write code to implement the game
+llm: !wiseagents.llm.OpenaiAPIWiseAgentLLM
+  model_name: llama3.1
+  remote_address: http://localhost:11434/v1
+  system_message: You are an expert python programmer, considering the detailed description of a game in the conversation history, you are able to write the code to implement it. Write the code in python, object oriented, and provide it to the user.
+name: CoderAgent
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: CoderAgent
+---
+!wiseagents.agents.LLMOnlyWiseAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can write code to test the game
+llm: !wiseagents.llm.OpenaiAPIWiseAgentLLM
+  model_name: llama3.1
+  remote_address: http://localhost:11434/v1
+  system_message: You are an expert python programmer, considering the detailed description of a game in the conversation history, and the code implementing it you are able to write the code to test it. Write the code in python, and provide it to the user.
+name: QEAgent
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: QEAgent
+---
+!wiseagents.agents.LLMOnlyWiseAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can write documentation for the game
+llm: !wiseagents.llm.OpenaiAPIWiseAgentLLM
+  model_name: granite3-moe:latest
+  remote_address: http://localhost:11434/v1
+  system_message: "You are an expert content writer, understanding python code, and very good on writing usage manual of games. Considering the detailed description of a game in the conversation history, the code implementing it and the code testing it
+  you are able to write a detailed manual explaining how to use the program and play the game. Write the documentation in english, and provide it to the user."
+name: DocAgent
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: DocAgent
+---
+!wiseagents.agents.LLMOnlyWiseAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can write transalte text from english to italian
+llm: !wiseagents.llm.OpenaiAPIWiseAgentLLM
+  model_name: granite3-moe:latest
+  remote_address: http://localhost:11434/v1
+  system_message: "You are an expert language translator. Please translate the documentation provided in english to italian. The documentation is about a game, so you need to be able to understand the context and translate it properly."
+name: TranslatorAgent
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: TranslatorAgent
+---
+!custom_agents.PerceivingAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can perceive file changes
+name: PerceivingAgent
+file_path: ./game.txt
+check_interval: 5
+destination_agent_name: SequentialCoordinator
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: PerceivingAgent
+---
+!custom_agents.ActionAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is an agent that can write a file
+name: ActionAgent
+destination_file_path: ./books_suggested.txt
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: ActionAgent
+---
+!wiseagents.agents.SequentialMemoryCoordinatorWiseAgent
+metadata: !wiseagents.WiseAgentMetaData 
+  description: This is a coordinator agent
+name: SequentialCoordinator
+agents: ["SpecificationAgent", "CoderAgent", "QEAgent", "DocAgent", "TranslatorAgent"]
+transport:  !wiseagents.transports.StompWiseAgentTransport
+    host: localhost
+    port: 61616
+    agent_name: SequentialCoordinator
